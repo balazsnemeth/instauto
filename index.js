@@ -26,6 +26,8 @@ module.exports = async (browser, options) => {
 
     dontUnfollowUntilTimeElapsed = 3 * 24 * 60 * 60 * 1000,
 
+    numOfPageOfFollowersToLoad = 3,
+
     excludeUsers = [],
 
     dryRun = true,
@@ -273,7 +275,7 @@ module.exports = async (browser, options) => {
     let followers = await getFollowersOrFollowing({
       userId: userData.id,
       getFollowers: true,
-      maxPages: 1,
+      maxPages: numOfPageOfFollowersToLoad,
     });
 
     console.log('Followers', followers);
