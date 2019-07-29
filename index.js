@@ -461,14 +461,13 @@ module.exports = async (browser, options) => {
   await sleep(1000);
 
   if (!(await isLoggedIn())) {
-    await page.click('a[href="/accounts/login/"]');
+    await page.click('a[href="/accounts/login/?source=auth_switcher"]');
     await sleep(1000);
     await page.type('input[name="username"]', myUsername, { delay: 50 });
     await sleep(1000);
     await page.type('input[name="password"]', password, { delay: 50 });
     await sleep(1000);
-    const loginButton = (await page.$x("//button[contains(text(), 'Log in')]"))[0];
-    await loginButton.click();
+    await page.click('button[type="submit"]');
   }
 
   await sleep(3000);
