@@ -4,6 +4,35 @@ const assert = require('assert');
 const fs = require('fs-extra');
 const keyBy = require('lodash/keyBy');
 
+
+// Make sure there is a timestamp in each log message
+const log = console.log;
+
+console.log = function () {
+  const firstParameter = arguments[0];
+  const otherParameters = Array.prototype.slice.call(arguments, 1);
+
+  function formatConsoleDate (date) {
+    const hour = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const milliseconds = date.getMilliseconds();
+
+    return '[' +
+      ((hour < 10) ? '0' + hour : hour) +
+      ':' +
+      ((minutes < 10) ? '0' + minutes : minutes) +
+      ':' +
+      ((seconds < 10) ? '0' + seconds : seconds) +
+      '.' +
+      ('00' + milliseconds).slice(-3) +
+      '] ';
+  }
+
+  log.apply(console, [formatConsoleDate(new Date()) + firstParameter].concat(otherParameters));
+};
+
+
 module.exports = async (browser, options) => {
   const {
     instagramBaseUrl = 'https://www.instagram.com',
