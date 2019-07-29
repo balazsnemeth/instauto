@@ -339,9 +339,10 @@ module.exports = async (browser, options) => {
         ) {
           console.log('User has too many followers compared to follows or opposite, skipping');
         } else {
+          await sleep(1000);
           await followCurrentUser(follower);
           numFollowedForThisUser += 1;
-          await sleep(20000);
+          await sleep(15000);
         }
       } catch (err) {
         console.error(`Failed to process follower ${follower}`, err);
@@ -372,7 +373,7 @@ module.exports = async (browser, options) => {
 
           if (j % 10 === 0) {
             console.log('Have unfollowed 10 users since last sleep. Sleeping');
-            await sleep(10 * 60 * 1000, 0.1);
+            await sleep(2 * 60 * 1000, 0.1);
           }
         }
       }
