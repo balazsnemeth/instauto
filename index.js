@@ -454,6 +454,8 @@ module.exports = async (browser, options) => {
   page = await browser.newPage();
   await page.setUserAgent('Chrome');
 
+  await page.setViewport({ width: 1280, height: 1800 })
+
   await tryLoadCookies();
   await tryLoadDb();
 
