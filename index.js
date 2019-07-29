@@ -131,9 +131,24 @@ module.exports = async (browser, options) => {
     return okStatus;
   }
 
+  // <button class="BY3EC  _0mzm- sqdOP  L3NKy       " type="button">Follow</button>
+  // <button class="_5f5mN       jIbKX  _6VtSN     yZn4P   ">Follow</button>
+
   async function findFollowUnfollowButton(text) {
-    const elementHandles = await page.$x(`//button[text()='${text}']`);
+    const elementHandles = await page.$x("//button[contains(text(), '" + text + "')]");
     if (elementHandles.length !== 1) {
+
+      try {
+        const actionButtonTitle = await page.$eval('header button[type="button"]', el => el.textContent.trim());
+        if (actionButtonTitle.indexOf(text) > -1) {
+          return await page.$('header button[type="button"]');
+        }
+      } catch(e) {
+        console.error('!!! Error:', e);
+        return undefined;
+      }
+
+
       return undefined;
     }
     return elementHandles[0];
@@ -155,8 +170,16 @@ module.exports = async (browser, options) => {
       await elementHandle.click();
       await sleep(5000);
 
-      const elementHandle2 = await findFollowUnfollowButton('Following');
-      if (!elementHandle2) console.log('Failed to follow user (button did not change state)');
+      let elementHandle2 = await findFollowUnfollowButton('Following');
+      if (!elementHandle2) {
+        elementHandle2 = await findFollowUnfollowButton('Requested');
+        if (!elementHandle2) {
+          console.log('Failed to follow user (button did not change state)');
+        }
+        else {
+          console.log(`Follow was "Requested" on user: ${username}`);
+        }
+      }
 
       await addFollowedUser({ username, time: new Date().getTime() });
     }
