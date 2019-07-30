@@ -368,14 +368,14 @@ module.exports = async (browser, options) => {
         ) {
           console.log('User has too many followers compared to follows or opposite, skipping');
         } else {
-          await sleep(1000);
+          await sleep(800);
           await followCurrentUser(follower);
           numFollowedForThisUser += 1;
-          await sleep(15000);
+          await sleep(10000);
         }
       } catch (err) {
         console.error(`Failed to process follower ${follower}`, err);
-        await sleep(20000);
+        await sleep(15000);
       }
     }
   }
@@ -397,12 +397,12 @@ module.exports = async (browser, options) => {
         if (noActionTaken) {
           await sleep(3000);
         } else {
-          await sleep(15000);
+          await sleep(10000);
           j += 1;
 
           if (j % 10 === 0) {
             console.log('Have unfollowed 10 users since last sleep. Sleeping');
-            await sleep(2 * 60 * 1000, 0.1);
+            await sleep(20 * 1000);
           }
         }
       }
