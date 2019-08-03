@@ -164,7 +164,7 @@ module.exports = async (browser, options) => {
   // <button class="_5f5mN       jIbKX  _6VtSN     yZn4P   ">Follow</button>
 
   async function findFollowUnfollowButton(text) {
-    const elementHandles = await page.$x("//button[contains(text(), '" + text + "')]");
+    const elementHandles = await page.$x(`//header//button[text()='${text}']`);
     if (elementHandles.length !== 1) {
 
       try {
@@ -525,11 +525,20 @@ module.exports = async (browser, options) => {
     await page.type('input[name="password"]', password, { delay: 50 });
     await sleep(1000);
     await page.click('button[type="submit"]');
+
+    /* - the fix from master, should work this too
+    const loginButton = (await page.$x("//button[.//text() = 'Log In']"))[0];
+    await loginButton.click(); */
   }
 
   await sleep(3000);
 
-  assert(await isLoggedIn());
+  let warnedAboutLoginFail = false;
+  while (!(await isLoggedIn())) {
+    if (!warnedAboutLoginFail) console.log('WARNING: Login has not succeeded. This could be because of a "suspicious login attempt"-message. If that is the case, then you need to run puppeteer with headless false and complete the process.');
+    warnedAboutLoginFail = true;
+    await sleep(5000);
+  }
 
   await trySaveCookies();
 
