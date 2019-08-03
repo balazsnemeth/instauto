@@ -438,15 +438,20 @@ module.exports = async (browser, options) => {
     });
     console.log({ allFollowing });
 
+    const recentlyFollowed = [];
     const usersToUnfollow = allFollowing.filter((u) => {
       if (allFollowers.includes(u)) return false; // Follows us
       if (excludeUsers.includes(u)) return false; // User is excluded by exclude list
       if (haveRecentlyFollowedUser(u)) {
-        console.log(`Have recently followed user ${u}, skipping`);
+        recentlyFollowed.push(u);
         return false;
       }
       return true;
     });
+
+    if (recentlyFollowed.length) {
+      console.log(`Have recently followed users, skip: ${recentlyFollowed.join()}`);
+    }
 
     console.log('usersToUnfollow', JSON.stringify(usersToUnfollow));
 
